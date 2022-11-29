@@ -1,0 +1,125 @@
+.navbar{
+    margin-top: 5px;
+}
+
+.navbar-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+    margin: auto;
+    color: white;
+    position: relative;
+    overflow: visible;
+    z-index: 1;
+}
+
+
+
+.navbar-leftsite{
+    cursor: pointer;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.logo{
+    display: grid;
+    place-items: center;
+    padding: 5px;
+    border-radius: 50%;
+    background-color: purple;
+
+}
+
+
+
+.navbar-rightsite{
+    display: flex;
+    align-items: center;
+    list-style: none;
+    gap: 13px;
+}
+
+.navbar-rightsite li{
+    border: 1px solid purple;
+    border-radius: 5px;
+    padding: 1px 9px;
+    user-select: none;
+    cursor: pointer;
+    box-shadow: 0 0 8px purple;
+    transform: scale(1);
+    transition: all .3s ease-in-out;
+}
+.navbar-rightsite li:hover{
+    position: relative;
+    transform: scale(1.05);
+    border: 1px solid #82CD47;
+    box-shadow: 0 0 8px #82CD47;  
+}
+
+.search-box{
+    display: flex;
+    width: 80%;
+    margin: auto;
+    margin-top: 7px;
+    z-index: -1;  
+}
+.search-box input{
+    position: relative;
+    width: 100%;
+    height: 2em;
+    background-color: rgba(0, 0, 0, 0.904);
+    padding-left: .5em;
+    outline: none;
+    border: none;
+    margin: auto;
+    color: white;
+    font-size: 18px;
+    transition: all  ease-in-out;
+}
+.search-box .hide-search-box{
+    margin-top: -5em;
+}
+.search-box .show-search-box{
+    margin-top: 0;
+}
+
+
+
+.menu{
+    font-size: 20px;
+    visibility: hidden;
+}
+
+
+
+
+@media (max-width:480px){
+   .navbar-container{
+       align-items: baseline;
+       overflow: hidden;
+       width: 100%;
+   }
+   .menu{
+       background-color: white;
+       visibility: visible;
+   }
+   .navbar-rightsite{
+       position: absolute;
+       flex-direction: column;
+       row-gap: 7px;
+       left: 0;
+       top: 40px;
+       width: 100%;
+   }
+}
+
+
+
+
+.height{
+    height: 130px;
+    visibility: visible;
+}
+

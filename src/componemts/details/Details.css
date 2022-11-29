@@ -1,0 +1,149 @@
+.details-container{
+    margin: auto;
+    margin-top: 1em;
+}
+
+.details{
+    height: auto;
+    background-size: cover;
+    background-position: top;
+    margin-bottom: 2.5em;
+   
+}
+
+.details-bg{
+    background-color: rgba(0, 0, 0, 0.794);
+    display: flex;
+    align-items: flex-start;
+    z-index: 1;
+    padding: 0 1.8em;
+    width: 100%;
+}
+
+.details-bg .left{
+    width: 22%;
+    /* height: 20em; */
+    border-radius: 5px;
+    overflow: hidden;
+    height: 20em;
+}
+
+/* Details left site poster image */
+.details-bg .left .poster{
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    transform: scale(1);
+    transition: all .3s ease-in-out;
+}
+.details-bg .poster:hover{
+    transform: scale(1.2);
+}
+
+
+
+
+
+.details-bg .right{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    row-gap: 7px;
+    width: 78%;
+    padding: 0px .5em;
+    margin-bottom: 3em;
+}
+
+.genres-container{
+    list-style: none;
+    display: flex;
+    column-gap: 5px;
+}
+.genres-container li{
+    background-color: rgba(128, 0, 128, 0.972);
+    padding: 2px 7px;
+    border-radius: 0px 8px;
+}
+#min{
+    background-color: #54B435;
+}
+
+.casts-lists-container{
+    display: flex;
+    column-gap: 4px;
+    list-style: none;
+}
+.casts-lists-container li{
+    border-radius: 5px;
+    width: 110px;
+    height: 130px;
+}
+.casts-lists-container li img{
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    transform: scale(1);
+    transition: all .3s ease-in-out;
+}
+.casts-lists-container li img:hover{
+   transform: scale(1.1);
+   z-index: -1;
+}
+
+
+@media (max-width:768px){
+  .details-bg{
+    flex-direction: column;
+    align-items: center;
+  }
+  .details-bg .left{
+    width: 87%;
+    height: 60vh;
+  }
+  .details-bg .right{
+    padding: 0;
+    width: 87%;
+    margin-bottom: 1em;
+  }
+  .casts-lists-container{
+      margin-bottom: 2em;
+  }
+}
+
+@media (max-width:480px){
+    .details-bg{
+        padding: 0;
+    }
+    .details-bg .left{
+        width: 100%;
+    }
+    .details-bg .right{
+        width: 100%;
+    }
+   .casts-lists-container{
+       justify-content: space-between;
+       flex-wrap: wrap;
+       row-gap: 1.5em;
+   }
+   .casts-lists-container li{
+       width: 119px;
+       height: 180px;
+   }
+   .genres-container{
+       flex-wrap: wrap;
+   }
+}
+
+
+
+@media (max-width:478px){
+  .casts-lists-container li{
+      flex-basis: 49%;
+  }
+}
+
+@media (max-width:290px) {
+  .casts-lists-container li{
+      flex-basis: 100%;
+  }
+}

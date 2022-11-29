@@ -1,0 +1,20 @@
+.choice-btn{
+    display: flex;
+    margin: auto;
+    margin-bottom: 1em;
+    background-color: rgba(0, 0, 0, 0.904);
+    border-radius: 5px;
+
+}
+.movie,.series{
+    border-radius: 5px;
+    height: 2em;
+    width: 5em;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    transition: all .2s ease-in-out;
+}
+.select{
+    background-color: purple;
+}

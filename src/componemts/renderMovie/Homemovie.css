@@ -1,0 +1,244 @@
+.home-movie-container{
+    width: 80%;
+    margin: auto;
+    margin-top: 1em;
+}
+
+
+
+.upcoming{
+    position: relative;
+    width: 100%;
+    background-size: cover;  
+    background-repeat: no-repeat;
+    background-position: top;
+}
+.upcomming-text{
+    margin-left: 18px;
+    font-size: 20px;
+    font-weight: 700;
+}
+.overwrite-poster-bg{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.794);
+}
+
+.left-arrow{
+    position: absolute;
+    left: -30px;
+    top: 50%;
+    background-color: transparent;
+    border: none;
+}
+
+.right-arrow{
+    position: absolute;
+    right: -29px;
+    top: 50%;
+    background-color: transparent;
+    border: none;
+}
+
+
+
+.upcoming-details-container{
+    margin-top: 5px;
+    display: flex;
+}
+.upcoming-details-container .left{
+    display: grid;
+    /* place-items: center; */
+    width: 30%;
+    /* height: 80%; */
+}
+.upcomming-img-container{
+    width: 100%;
+    height: 90%;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+
+
+.upcomming-img-container img{
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    transition: all .3s ease-in-out;
+    transform: scale(1);
+}
+.upcomming-img-container img:hover{
+
+    transform: scale(1.1) rotate(1deg);
+}
+
+
+
+.upcoming-details-container .right{
+    width: 70%;
+    height: 85%;
+    display: flex;
+    flex-direction: column;
+    padding-left: 1em;
+    /* justify-content: center; */
+    row-gap: 4px;
+}
+.upcomming-genres-ul{
+    list-style: none;
+    display: flex;
+    column-gap: 5px;
+}
+.upcomming-cast-ul{
+    display: flex;
+    column-gap: 4px;
+    list-style: none;
+
+}
+.upcomming-cast-ul li{
+    width: 114px;
+    height: 170px;
+    border-radius: 5px;
+}
+.upcomming-cast-ul div,img{
+    width: 100%;
+    height: 100%;
+}
+
+
+
+.trending-movie-container{
+    display: flex;
+    gap: 9px;
+    flex-direction: column;
+    padding: 10px;
+}
+
+
+.cards-container ul{
+    display: flex;
+    gap: .5em;
+    overflow-x: scroll;
+    overflow-y: hidden;
+
+}
+
+.cards-container ul::-webkit-scrollbar {
+    display: none;
+    user-select: none;
+  }
+
+.view-more{
+    position: relative;
+    font-size: 13px;
+    padding: 1px 8px 1px 8px;
+    border: 1px solid white;
+    border-radius: 10px;
+    cursor: pointer;
+    z-index: 1;
+}
+.view-more::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    transition: all .3s ease-in-out;
+}
+.view-more:hover::before{
+    border: none;
+    background-color: purple;
+    border-radius: 10px;
+    width: 100%;
+    z-index: -1;
+    transform-origin: right;    
+}
+
+
+.cards-container ul li{
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+    width: 150px;
+}
+
+.img-container{
+    width: 150px;
+    height: 200px;
+    border-radius: 15px;
+    overflow: hidden;
+    user-select: none;
+}
+.img{
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    transform: scale(1);
+    user-select: none;
+    transition: all .2s ease-in-out;
+}
+.img:hover{
+   transform: scale(1.1);
+}
+
+
+
+@media (max-width:768px) {
+   .upcomming-text{
+       margin-left: 0;
+   }
+   .upcoming-details-container{
+       flex-direction: column;
+       align-items: center;
+   }
+   .upcoming-details-container .left{
+       display: block;
+       align-items: center;
+       width: 100%;
+   }
+   .upcomming-img-container{
+       width: 100%;
+   }
+   .upcomming-img-container img{
+       width: 100%;
+       height: 320px;
+   }
+
+   .upcoming-details-container .right{
+       padding: 0;
+       width: 100%;
+   }
+   .upcoming{
+    margin-bottom: 1em;
+}
+}
+
+@media (max-width:480px) {
+    .home-movie-container{
+        width: 100%;
+    }
+
+    .upcomming-text{
+        font-size: 18px;
+    }
+   .upcomming-img-container img{
+       height: 300px;
+   }
+
+   .upcoming{
+       margin-bottom: 1em;
+       width: 100%;
+   }
+   .upcomming-cast-ul{
+       /* flex-wrap: wrap;
+       column-gap: 7px;
+       row-gap: 7px; */
+       
+   }
+   .upcomming-cast-ul li{
+       /* flex-basis: 49%; */
+   }
+}
