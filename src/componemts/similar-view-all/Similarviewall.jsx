@@ -5,13 +5,13 @@ import {
   similarMovieAction,
   similarSeriesAction,
 } from "../../redux/Redux-action";
+import Loader from "../Loader";
 import Navigationbar from "../view-all/Navigationbar";
 
 const Similarviewall = () => {
-  let [pages, setPages] = useState(1);
-  let [pagination, setPagination] = useState([1, 2, 3, "last"]);
+  let [pagination, setPagination] = useState([]);
 
-  let { id, type } = useParams();
+  let { id, type, page } = useParams();
   let dispatch = useDispatch();
   let navigate = useNavigate();
 
@@ -28,37 +28,50 @@ const Similarviewall = () => {
     }
   };
   let collections = getSimilarCollections();
+  let filter = collections[2].filter((data) => data.poster_path !== null);
 
-  let paginationFn = (pg, indx) => {
-    let pgs = Navigationbar(pages, pg, indx, pagination, collections[1]);
-    setPages(pgs);
-    navigate(`/${id}/${type}/page/${pgs}`);
+  let paginationFn = (pg) => { // Pagination bar "Click" Url query "Page" change
+    navigate(`/${id}/${type}/page/${pg === "first" ? 1 : pg === "last" ? collections[1] : pg}`); // recalled current componemt URL
   };
+
+  let urlPageChangeFireFn = async() => {  // Url query "Page" change Fire
+    let pagi = await Navigationbar(parseInt(page),pagination,collections[1]);
+    let paginationLists = Array.from(document.querySelectorAll(".list"));
+    pagi !== undefined && paginationLists.map((data) => {
+      data.classList.contains('active')&&data.classList.remove('active');
+      if (data.innerHTML === page) {
+        data.classList.add('active');
+      } 
+      return null;
+    });
+  };
+  urlPageChangeFireFn();
 
   useEffect(() => {
     if (type === "similar-movie") {
-      dispatch(similarMovieAction(pages, id));
+      dispatch(similarMovieAction(page, id));
     } else if (type === "similar-series") {
-      dispatch(similarSeriesAction(pages, id));
+      dispatch(similarSeriesAction(page, id));
     }
-  }, [dispatch, id, type, pages]);
+  }, [dispatch, page, id, type]);
 
   return (
     <div className="view-all-container">  {/* This componemt extends from Viewall Componemt */}
-      <div className="searching-container">
+      {/* <div className="searching-container">
         <input className="input-ele" type="text" placeholder="Search" />
         <button className="search-btn">Search</button>
-      </div>
-      <ul className="cards-container">
-        {collections[2].map((data) => {
+      </div> */}
+      {collections[0]?<Loader/>:
+        <ul className="viewall-cards-container">
+        {filter.map((data) => {
           return (
             <li
               key={data.id}
               onClick={()=>navigate(
-                `/${type === 'trending-movie'||type==='toprated-movie'||type==='similar-movie'?'movie':'series'}/${data.id}/${data.title||data.original_name}`
+                `/${type === 'trending-movie'||type==='toprated-movie'||type==='similar-movie'?'movie':'series'}/${data.id}/${data.name||data.original_name}`
               )}
             >
-              <div className="img-container">
+              <div className="viewall-img-container">
                 <img
                   className="img"
                   src={`https://image.tmdb.org/t/p/w500/${
@@ -74,17 +87,18 @@ const Similarviewall = () => {
           );
         })}
       </ul>
-      <ul className="navigation" style={{ display: "flex", margin: "auto" }}>
+      }
+      {!collections[0]&&
+        <ul className="pagination" style={{ display: "flex", margin: "auto" }}>
         {pagination.map((pg, index) => (
           <li
-            className="list"
-            onClick={() => paginationFn(pg, index)}
             key={index}
           >
-            <button>{pg}</button>
+            <button className="list" onClick={() => paginationFn(pg, index)}>{pg}</button>
           </li>
         ))}
       </ul>
+      }
     </div>
   );
 };

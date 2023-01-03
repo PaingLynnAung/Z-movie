@@ -6,107 +6,119 @@ import {
   searchingSeriesAction,
 } from "../../redux/Redux-action";
 import Navigationbar from "../view-all/Navigationbar";
-import './Searching.css'
+import Loader from "../Loader";
+import "./Searching.css";
 
 const Searching = () => {
-  let [page, setPage] = useState(1);
-  let [showType,setShowType] = useState(['Movie',true]);
-  let [pagination,setPagination] = useState([1,2,3,'last']);
+  let [showType, setShowType] = useState(['Movie',true]);
+  let [render,setRender] = useState(true);
+  let [pagination, setPagination] = useState([]);
 
   let navigate = useNavigate();
   let dispatch = useDispatch();
-  let [searchParams] = useSearchParams();
-  let value = searchParams.get('search');
+
+  let [searchParams, setSearchParams] = useSearchParams();
+  let name = searchParams.get("name");
+  let page = searchParams.get('page');
 
   let searchingMovies = useSelector((state) => state.searchingMovie);
   let searchingSeriess = useSelector((state) => state.searchingSeries);
-  let total_page_m = searchingMovies.total_page;
-  let total_page_s = searchingSeriess.total_page;
+
+  
 
   let getCollections = () => {
-    if (showType[0]==='Movie'){
-      let { searchingMovieLoading, total_page, searchingMovie } = searchingMovies;
-      return [ searchingMovieLoading, total_page, searchingMovie ]
-    }else if(showType[0]==='Series'){
-      let { searchingSeriesLoading, total_page, searchingSeries } = searchingSeriess;
-      return [ searchingSeriesLoading, total_page, searchingSeries ]
-    }
-  }
-  let collections = getCollections();
-  let totalPage = collections[1]
-
-/********************************* Conditional set 'select' className *************************/  
-  let handleClick = e => {
-    pagination = [];
-      if (e.target.innerText==='Movie') {
-        setShowType([
-            e.target.innerText,
-            true
-        ])
-        let totalP = searchingMovies.total_page;
-        totalP<3 && [...Array(totalP).keys()].map(data => setPagination([...pagination,data+1]))
-        totalP>3&&setPagination([1,2,3,'last']);
-      }else if (e.target.innerText==='Series'){
-          setShowType([
-              e.target.innerText,
-              false
-          ])
-          let totalP = searchingSeriess.total_page;
-          totalP<3 && [...Array(totalP).keys()].map(data => setPagination([...pagination,data+1]))
-          totalP>3 && setPagination([1,2,3,'last'])
-        }
-  }
-
-/********************************** Pagination Function **************************/
-  let paginationFn = (pg, indx) => {
-    let pgs = Navigationbar(page, pg, indx, pagination, totalPage);
-    setPage(pgs);
-    // navigate(`/${type}/page/${pgs}`); // recalled current componemt URL
+      if (showType[0] === "Movie") {
+        let { searchingMovieLoading, total_page, searchingMovie } = searchingMovies;
+        return [searchingMovieLoading, total_page, searchingMovie];
+      } else if (showType[0] === "Series") {
+        let { searchingSeriesLoading, total_page, searchingSeries } = searchingSeriess;
+        return [searchingSeriesLoading, total_page, searchingSeries];
+      }   
   };
 
-  let checkedTotalPage = () => {
-     
-    console.log(totalPage)
-    // if (total_page_m<3||total_page_s<3){
-    //   console.log('under 3')
-    //   pagination = [];
-    //   [...Array(totalPage).keys()].map(data => setPagination([...pagination,data+1]))
+  let collections = getCollections();
+  
+  let filter =collections[2].filter(data => data.poster_path !== null);
 
-    // }
+  let handleClick = (e) => { // Conditional rendering for Movie and Series options
+    if (e.target.innerText === "Movie") {
+      localStorage.setItem('showType',e.target.innerHTML);
+      setShowType([e.target.innerHTML,true])
+      setRender(!render)
+    }
+    if (e.target.innerText === "Series") {
+      localStorage.setItem('showType',e.target.innerHTML);
+      setShowType([e.target.innerHTML,false])
+      setRender(!render)
+      
+    } 
+    paginationFn('first'); // Chnage URI page=1
+  };
+
+  let paginationFn = (pg) => { // Pagination bar "Click" Url query "Page" change
+    setSearchParams({ 'name': name, page: pg==='first'?1 : pg === 'last'? collections[1] : pg })
   }
-  checkedTotalPage()
 
-/******************************** Use Effect **************************************/
+  let urlPageChangeFireFn = async() => {  // Url query "Page" change Fire
+    let pagi = await Navigationbar(parseInt(page),pagination,collections[1]);
+    let paginationLists = Array.from(document.querySelectorAll(".list"));
+    pagi !== undefined && paginationLists.map((data) => {
+      data.classList.contains('active')&&data.classList.remove('active');
+      if (data.innerHTML === page) {
+        data.classList.add('active');
+      } 
+      return null;
+    });
+  };
+  urlPageChangeFireFn();
+
+  /******************************** Use Effect **************************************/
   useEffect(() => {
-    dispatch(searchingMovieAction(value, page));
-    dispatch(searchingSeriesAction(value, page));
+    let storage = localStorage.getItem('showType')?localStorage.getItem('showType'):localStorage.setItem('showType','Movie');
+    setShowType([storage,storage==='Movie'?true:false])
+    dispatch(searchingMovieAction(name, page));
+    dispatch(searchingSeriesAction(name, page));
 
-  }, [dispatch, page, value, showType]);
+  }, [dispatch, page, name]);
 
   return (
-    <div style={{display:'flex',flexDirection:'column'}}>
+    <>
+    {collections[2].length===0&&collections[0]===false?
+    <div className="search-not-found">
+    <h3>Your search movie doesn't found :(</h3>
+  </div>
+    : 
+    <div style={{ display: "flex", flexDirection: "column" }}>
       <div className="choice-btn">
-          <button className={`movie ${showType[1]===true&&'select'}` } onClick={handleClick} >Movie</button>
-          <button className={`series ${showType[1]===false&&'select'}`} onClick={handleClick} >Series</button>
+        <button
+          className={`movie ${showType[1] === true && "select"}`}
+          onClick={handleClick}
+        >
+          Movie
+        </button>
+        <button
+          className={`series ${showType[1] === false && "select"}`}
+          onClick={handleClick}
+        >
+          Series
+        </button>
       </div>
-      <ul className="cards-container">
-        {(showType[0]==='Movie'?collections[2]:collections[2]).map((data) => {
+      {collections[0]?<Loader/>:
+      (<ul className="viewall-cards-container">
+      {filter.map(
+        (data) => {
           return (
             <li
               key={data.id}
-              //   onClick={() =>
-              //     navigate(
-              //       `/${
-              //         type === "discover-movie" ||
-              //         type === "trending-movie" ||
-              //         type === "toprated-movie"
-              //           ? "movie"
-              //           : "series"
-              //       }/${data.id}/${data.title || data.original_name}`
-              //     )
-              //   }
+              onClick={() =>
+                navigate(
+                  `/${showType[0] === "Movie" ? "movie" : "series"}/${
+                    data.id
+                  }/${data.title === undefined ? data.name : data.title}`
+                )
+              }
             >
-              <div className="img-container">
+              <div className="viewall-img-container">
                 <img
                   className="img"
                   src={`https://image.tmdb.org/t/p/w500/${
@@ -120,21 +132,27 @@ const Searching = () => {
               <div>{data.title || data.original_name}</div>
             </li>
           );
-        })}
-      </ul>
-      <ul className="navigation" style={{ display: "flex", margin: "auto" }}>
-        {
-          pagination.length>0 && pagination.map((pg, index) => (
-            <li
-              className="list"
-              onClick={() => paginationFn(pg, index)}
-              key={index}
-            >
-              <button>{pg}</button>
+        }
+      )}
+    </ul>)
+      }
+      {
+        !collections[0] &&
+        <ul className="pagination" style={{ display: "flex", margin: "auto" }}>
+        {pagination.length > 0 &&
+          pagination.map((pg, index) => (
+            <li key={index}>
+              <button className="list" onClick={() => paginationFn(pg, index)}>
+                {pg}
+              </button>
             </li>
           ))}
       </ul>
-    </div>
+      }
+    </div> 
+  }
+    
+    </>
   );
 };
 

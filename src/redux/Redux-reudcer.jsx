@@ -23,7 +23,7 @@ export const discoverMovieReducer = (state={discoverMovie:[]},action) => {
   switch (action.type) {
     case 'DISCOVER_MOVIE_REQUEST':
       return { discoverMovieLoading: true, discoverMovie: []}
-    case 'DISCOVER_MOVIE':
+    case 'DISCOVER_MOVIE': 
       return { discoverMovieLoading: false, total_page: 500, discoverMovie: action.payload.results  }
     default:
       return state;
@@ -181,7 +181,7 @@ export const searchingMovieReducer = (state={searchingMovie:[]},action) => {
   switch (action.type) {
     case 'SEARCHNG_MOVIE_REQUEST':
       return { searchingMovieLoading: true, searchingMovie: [] }
-    case 'SEARCHING_MOVIE':
+    case 'SEARCHING_MOVIE':  
       return { searchingMovieLoading: false,total_page: action.payload.total_pages, searchingMovie: action.payload.results }
     default:
       return state;
@@ -192,7 +192,7 @@ export const searchingSeriesReducer = (state={searchingSeries:[]},action) => {
   switch (action.type) {
     case 'SEARCHING_SERIES_REQUEST':
       return { searchingSeriesLoading: true, searchingSeries: [] }
-    case 'SEARCHING_SERIES':
+    case 'SEARCHING_SERIES': 
       return { searchingSeriesLoading: false,total_page: action.payload.total_pages, searchingSeries: action.payload.results }
     default:
       return state;
@@ -200,13 +200,13 @@ export const searchingSeriesReducer = (state={searchingSeries:[]},action) => {
 }
 
 
-export const searchingReducer = (state={searching:false},action) => {
-  switch (action.type) {
-    case 'SEARCHING':
-      return { searching: true, value:action.payload };
-    case 'SEARCHING_HIDE':
-      return {searching:false}
-    default:
-      return state;
-  }
-}
+// export const searchingReducer = (state={searching:false},action) => {
+//   switch (action.type) {
+//     case 'SEARCHING':
+//       return { searching: true, value:action.payload };
+//     case 'SEARCHING_HIDE':
+//       return {searching:false}
+//     default:
+//       return state;
+//   }
+// }

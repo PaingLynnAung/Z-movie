@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import "./Viewall.css";
 import Navigationbar from "./Navigationbar";
+import Loader from "../Loader";
+
 import {
   discoverMovieAction,
   discoverSeriesAction,
@@ -12,23 +14,22 @@ import {
   trendingSeriesAction,
 } from "./../../redux/Redux-action";
 
-const Viewall = () => {
-  let [pages, setPages] = useState(1);
-  let [inputValue, setInputValue] = useState("");
-  let [navigation, setNavigation] = useState([1, 2, 3, "last"]);
 
-  let { type } = useParams();
+const Viewall = () => {
+  let [pagination, setPagination] = useState([]);
+  // let pagination = [];
+
+  let { type, page } = useParams();
   let dispatch = useDispatch();
   let navigate = useNavigate();
 
-  let trendingMovies = useSelector(state => state.trendingMovie);
-  let topRatedMovies = useSelector(state => state.topRatedMovie);
-  let trendingSeriess = useSelector(state => state.trendingSeries);
-  let topRatedSeriess = useSelector(state => state.topRatedSeries);
-  let discoverMovies = useSelector(state => state.discoverMovie);
-  let discoverSeriess = useSelector(state => state.discoverSeries);
-
-
+  let trendingMovies = useSelector((state) => state.trendingMovie);
+  let topRatedMovies = useSelector((state) => state.topRatedMovie);
+  let trendingSeriess = useSelector((state) => state.trendingSeries);
+  let topRatedSeriess = useSelector((state) => state.topRatedSeries);
+  let discoverMovies = useSelector((state) => state.discoverMovie);
+  let discoverSeriess = useSelector((state) => state.discoverSeries);
+  
   let getCollections = () => {
     if (type === "trending-movie") {
       let { trendingMovieLoading, total_page, trendingMovie } = trendingMovies;
@@ -51,98 +52,86 @@ const Viewall = () => {
     }
   };
   let collections = getCollections();
-
-  /********************* Pagination Bar Action Function ***********************/
-  let navigateFn = (pg, indx) => {
-    let pgs = Navigationbar(pages, pg, indx, navigation, collections[1]);
-    setPages(pgs);
-    navigate(`/${type}/page/${pgs}`); // recalled current componemt URL
+  let filter = collections[2].filter((data) => data.poster_path !== null);
+ 
+  let paginationFn = (pg) => { // Pagination bar "Click" Url query "Page" change
+    navigate(`/${type}/page/${pg === "first" ? 1 : pg === "last" ? collections[1] : pg}`); // recalled current componemt URL
   };
 
-/************************************* Handle Input Change ********************************************/
-  let handleChange = e => {
-    setInputValue(e.target.value);
-  }
 
-/**************************** Searching Btn Click Fn *******************************/
-  let handleClick = () => {
-    if(inputValue.length>0){
-      navigate(`/movie?search=${inputValue}&page=1`)
-    }
+  let urlPageChangeFireFn = async() => {  // Url query "Page" change Fire
+    let pagi = await Navigationbar(parseInt(page),pagination,collections[1]);
+    let paginationLists = Array.from(document.querySelectorAll(".list"));
+    pagi !== undefined && paginationLists.map((data) => {
+      data.classList.contains('active')&&data.classList.remove('active');
+      if (data.innerHTML === page) {
+        data.classList.add('active');
+      } 
+      return null;
+    });
   };
+  urlPageChangeFireFn();
 
-  /************* Fetching Effect ************/
-  useEffect(() => {
-    if (type === "trending-movie") {
-      dispatch(trendingMovieAction(pages));
-    } else if (type === "toprated-movie") {
-      dispatch(topRatedMovieAction(pages));
-    } else if (type === "trending-series") {
-      dispatch(trendingSeriesAction(pages));
-    } else if (type === "toprated-series") {
-      dispatch(topRatedSeriesAction(pages));
-    } else if (type === "discover-movie") {
-      dispatch(discoverMovieAction(pages));
-    } else if (type === "discover-series") {
-      dispatch(discoverSeriesAction(pages));
-    }
-  }, [dispatch, pages, type]);
+  useEffect(() => { //  Fetching and call urlPageChangeFireFn Function
+      if (type === "trending-movie") {
+        dispatch(trendingMovieAction(page));
+      } else if (type === "toprated-movie") {
+        dispatch(topRatedMovieAction(page));
+      } else if (type === "trending-series") {
+        dispatch(trendingSeriesAction(page));
+      } else if (type === "toprated-series") {
+        dispatch(topRatedSeriesAction(page));
+      } else if (type === "discover-movie") {
+        dispatch(discoverMovieAction(page));
+      } else if (type === "discover-series") {
+        dispatch(discoverSeriesAction(page));
+      }
+  }, [dispatch, type, page]);
 
   return (
     <div className="view-all-container">
-      <div className="searching-container">
-        <input
-          className="input-ele"
-          type="text"
-          placeholder="Search"
-          onChange={handleChange}
-        />
-        <button className="search-btn" onClick={handleClick}>
-          Search
-        </button>
-      </div>
-      <ul className="cards-container">
-        {collections[2].map((data) => {
-          return (
-            <li
-              key={data.id}
-              onClick={() =>
-                navigate(
-                  `/${
-                    type === "discover-movie" ||
-                    type === "trending-movie" ||
-                    type === "toprated-movie"
-                      ? "movie"
-                      : "series"
-                  }/${data.id}/${data.title || data.original_name}`
-                )
-              }
-            >
-              <div className="img-container">
-                <img
-                  className="img"
-                  src={`https://image.tmdb.org/t/p/w500/${
-                    data.poster_path === null
-                      ? data.backdrop_path
-                      : data.poster_path
-                  }`}
-                  alt="Not have path !"
-                />
-              </div>
-              <div>{data.title || data.original_name}</div>
-            </li>
-          );
-        })}
-      </ul>
-      <ul className="navigation" style={{ display: "flex", margin: "auto" }}>
-        {navigation !== undefined &&
-          navigation.map((pg, index) => (
-            <li
-              className="list"
-              onClick={() => navigateFn(pg, index)}
-              key={index}
-            >
-              <button>{pg}</button>
+      {collections[0]?<Loader/>:
+      (<ul className="viewall-cards-container">
+      {filter.map((data) => {
+        return (
+          <li
+            key={data.id}
+            onClick={() =>
+              navigate(
+                `/${
+                  type === "discover-movie" ||
+                  type === "trending-movie" ||
+                  type === "toprated-movie"
+                    ? "movie"
+                    : "series"
+                }/${data.id}/${data.title || data.original_name}`
+              )
+            }
+          >
+            <div className="viewall-img-container">
+              <img
+                className="img"
+                src={`https://image.tmdb.org/t/p/w500/${
+                  data.poster_path === null
+                    ? data.backdrop_path
+                    : data.poster_path
+                }`}
+                alt="Not have path !"
+              />
+            </div>
+            <div>{data.title || data.original_name}</div>
+          </li>
+        );
+      })}
+    </ul>)
+      }
+      <ul className="pagination" style={{ display: "flex", margin: "auto" }}>
+        {pagination !== undefined &&
+          pagination.map((pg, index) => (
+            <li key={index}>
+              <button className="list" onClick={() => paginationFn(pg, index)}>
+                {pg}
+              </button>
             </li>
           ))}
       </ul>

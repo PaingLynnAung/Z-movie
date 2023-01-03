@@ -7,7 +7,7 @@ import {
   movieDetailsReducer,
   movieTrailerReducer,
   searchingMovieReducer,
-  searchingReducer,
+  // searchingReducer,
   searchingSeriesReducer,
   seriesCastsReducer,
   seriesDetailsReducer,
@@ -49,10 +49,10 @@ let reducer = combineReducers({
 
   searchingMovie: searchingMovieReducer,
   searchingSeries: searchingSeriesReducer,
-
-  searching: searchingReducer
+  
+  // searching: searchingReducer
 });
+let middleware = [thunk];
+let initialState = {};
 
-// let inistallState = { };
-
-export const store = createStore(reducer, applyMiddleware(thunk));
+export const store = createStore(reducer, initialState, applyMiddleware(...middleware));

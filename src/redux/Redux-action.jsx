@@ -56,7 +56,7 @@ export const discoverSeriesAction = (page) => async(dispatch) => {
 
 
 /************************************* Fetching (Trending,Toprated)(Movie,Series) ***************************************/
-export const trendingMovieAction = (page) => async (dispatch) => {
+export const trendingMovieAction = (page) => async(dispatch,getState) => {
   dispatch({
     type: "TRENDING_MOVIE_REQUEST",
   });
@@ -69,7 +69,8 @@ export const trendingMovieAction = (page) => async (dispatch) => {
       dispatch({
         type: "TRENDING_MOVIE",
         payload: res.data,
-      })
+      }),
+
     );
 };
 

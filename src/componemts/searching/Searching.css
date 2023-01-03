@@ -18,3 +18,13 @@
 .select{
     background-color: purple;
 }
+
+.search-not-found{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    letter-spacing: 3px;
+    font-style: italic;
+    /* background-color: coral; */
+}

@@ -34,8 +34,15 @@ const Details = () => {
       return [seriesDetailsLoading, seriesDetails, seriesCasts];
     }
   };
-  let collections = getCollections();
-  
+  let collections = getCollections();  
+
+  let runtime,episode_number;
+
+  if (typ === 'series'&&collections[0]===false) {  // get runtime and episode number
+    runtime = collections[1].episode_run_time.length>0?collections[1].episode_run_time[0]:collections[1].last_episode_to_air.runtime;
+    episode_number = collections[1].last_episode_to_air.episode_number;
+  }else if ('movie'&&collections[0]===false) runtime = collections[1].runtime;
+
   let imgBaseUrl = 'https://image.tmdb.org/t/p/w500/';
   let backgroundImage,poster,castsList=[];
 
@@ -73,7 +80,12 @@ const Details = () => {
             <ul className="genres-container">
               {genres !== undefined &&
                 genres.map((data) => <li key={data.id}>{data.name}</li>)}
-              <li id="min" >{collections[1].runtime || collections[1].episode_run_time}mins</li>
+                {typ==='series'?
+                  <li id="min" >{runtime}mins</li>
+                  :
+                  <li id='min'>{runtime}mins</li>
+              }
+              {typ==='series'&&<li id='min'>total_episode - {episode_number}</li>}
             </ul>
             <div
               style={{

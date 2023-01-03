@@ -1,9 +1,15 @@
-.home-movie-container{
+.homepage-container{
     width: 80%;
     margin: auto;
-    margin-top: 1em;
 }
 
+
+.loading{
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: white;
+}
 
 
 .upcoming{
@@ -162,7 +168,7 @@
     display: flex;
     gap: 5px;
     flex-direction: column;
-    width: 150px;
+    /* width: 150px; */
 }
 
 .img-container{
@@ -232,13 +238,5 @@
        margin-bottom: 1em;
        width: 100%;
    }
-   .upcomming-cast-ul{
-       /* flex-wrap: wrap;
-       column-gap: 7px;
-       row-gap: 7px; */
-       
-   }
-   .upcomming-cast-ul li{
-       /* flex-basis: 49%; */
-   }
+   
 }

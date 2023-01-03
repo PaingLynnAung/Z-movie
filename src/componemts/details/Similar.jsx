@@ -64,7 +64,7 @@ const Similar = ({ id, typ }) => {
             {collections.map((data) => {
               return (
                 <li 
-                onClick={()=>navigate(`/${typ==='movie'?'movie':'series'}/${data.id}/${data.title}||${data.original_name}`)}//if you click to Details Route
+                onClick={()=>navigate(`/${typ==='movie'?'movie':'series'}/${data.id}/${data.title || data.original_name}`)}//if you click to Details Route
                 key={data.id}>
                   <div className="img-container">
                     <img
